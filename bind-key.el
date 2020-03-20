@@ -169,8 +169,10 @@ can safely be called at any time."
         (kdescvar (make-symbol "kdesc"))
         (bindingvar (make-symbol "binding")))
     `(let* ((,namevar ,key-name)
-            (,keyvar (if (vectorp ,namevar) ,namevar
-                       (read-kbd-macro ,namevar)))
+            (,keyvar ,(if (stringp key-name)
+                          (read-kbd-macro key-name)
+                        `(if (vectorp ,namevar) ,namevar
+                          (read-kbd-macro ,namevar))))
             (,kdescvar (cons (if (stringp ,namevar) ,namevar
                                (key-description ,namevar))
                              (quote ,keymap)))
